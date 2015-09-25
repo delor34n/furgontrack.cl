@@ -2,7 +2,14 @@
     "email" : {
         "host" : "localhost@example.com",
         "port" : "25",
+        "encryption" : "SO_SECURE",
         "username": "ken",
         "password": "123456"
+    },
+
+    "subscribe" : {
+        "email"   : "contact@example.com",
+        "name"    : "Hey!",
+        "subject" : "sup"
     }
 }

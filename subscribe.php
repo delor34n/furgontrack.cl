@@ -18,9 +18,9 @@
 			$message->setEncoder(Swift_Encoding::get8BitEncoding());
 			$message->setTo(array(
 		  		$email_input => $email_input,
-			  	"hola@furgontrack.cl" => "Contacto FurgonTrack"
+			  	$subscribe->email => $subscribe->name
 			));
-			$message->setSubject("Solicitud de inscripción en lista de correo");
+			$message->setSubject($subscribe->subject);
 			
 			$email_content = file_get_contents("_email_.html");			
 			$css_email = file_get_contents("_email.css");
@@ -31,7 +31,7 @@
 			$email_content = @$emogrify->emogrify();
 
 			$message->setBody($email_content, "text/html");
-			$message->setFrom("hola@furgontrack.cl", "Contacto FurgonTrack");
+			$message->setFrom($subscribe->email, $subscribe->name);
 
 			// Send the email
 			$mailer = Swift_Mailer::newInstance($transport);
