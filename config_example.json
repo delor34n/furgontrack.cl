@@ -1,0 +1,8 @@
+{
+    "email" : {
+        "host" : "localhost@example.com",
+        "port" : "25",
+        "user" : "ken",
+        "password": "123456"
+    }
+}
