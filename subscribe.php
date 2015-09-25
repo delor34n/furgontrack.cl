@@ -18,9 +18,9 @@
 			$message->setEncoder(Swift_Encoding::get8BitEncoding());
 			$message->setTo(array(
 		  		$email_input => $email_input,
-			  	$subscribe->email => $subscribe->name
+			  	$config->subscribe->email => $config->subscribe->name
 			));
-			$message->setSubject($subscribe->subject);
+			$message->setSubject($config->subscribe->subject);
 			
 			$email_content = file_get_contents("email_tpl/_email_.html");			
 			$css_email = file_get_contents("email_tpl/_email.css");
@@ -31,7 +31,7 @@
 			$email_content = @$emogrify->emogrify();
 
 			$message->setBody($email_content, "text/html");
-			$message->setFrom($subscribe->email, $subscribe->name);
+			$message->setFrom($config->subscribe->email, $config->subscribe->name);
 
 			// Send the email
 			$mailer = Swift_Mailer::newInstance($transport);
