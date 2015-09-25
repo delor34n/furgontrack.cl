@@ -1163,8 +1163,12 @@ if it's not present, don't show loader */
 }
 
 #resultado{
-	width: 100% !important;
-	margin: auto;
+	position:relative;
+	top:0;
+	left:0;
+	z-index:10;
+	max-width:100%;
+	overflow:hidden;
 }
 
 @media(min-width: 768px){

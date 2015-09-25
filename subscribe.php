@@ -36,10 +36,10 @@
 			// Send the email
 			$mailer = Swift_Mailer::newInstance($transport);
 			if($mailer->send($message)){
-				echo "success";
+				echo "3";
 				return;
 			} else {
-				echo "2";
+				echo "0";
 				return;
 			}
 		} else {
@@ -47,7 +47,7 @@
 			return;
 		}
 	} else{
-		echo "1";
+		echo "2";
 		return;
 	}
 ?>

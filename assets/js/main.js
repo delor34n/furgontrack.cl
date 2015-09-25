@@ -60,6 +60,7 @@ $(function() {
 $( document ).ready(function() {
     $("#email-form").submit(function(e){
         e.preventDefault();
+        $("#resultado").css('display', 'none');
         var data = {
             "email" : $("#email").val()
         };
@@ -72,15 +73,25 @@ $( document ).ready(function() {
             },
             success:  function (response) {
                 $("#boton-email").html("¡Avísenme!");
-                if(response == "success")
-                    $("#resultado").html("<div class=\"alert alert-success email\" role=\"alert\">Correo agregado.</div>");
+                if(response == "3")
+                    $("#resultado").html("<div class=\"alert alert-success email\" role=\"alert\">¡Gracias! Te hemos enviado un correo.</div>");
                 else if (response == "0")
                     $("#resultado").html("<div class=\"alert alert-danger email\" role=\"alert\">Algo salió mal.</div>");
                 else if (response == "1")
-                    $("#resultado").html("<div class=\"alert alert-danger email\" role=\"alert\">No, así no :D</div>");
+                    $("#resultado").html("<div class=\"alert alert-danger email\" role=\"alert\">Formato no válido :(</div>");
                 else if (response == "2")
-                    $("#resultado").html("<div class=\"alert alert-warning email\" role=\"alert\">Email ya registrado.</div>");
+                    $("#resultado").html("<div class=\"alert alert-warning email\" role=\"alert\">No po, así no :D</div>");
+                $("#resultado").show(500);
+                $('#resultado').scrollTo(600);
             }
         });
-    });
+
+        jQuery.fn.extend({
+            scrollTo : function(speed, easing){
+                return this.each(function(){
+                    var targetOffset = $(this).offset().top;
+                    $('html,body').animate({scrollTop: targetOffset}, speed, easing);
+                });
+            }});
+        });
 });
