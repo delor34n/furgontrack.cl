@@ -1,47 +1,51 @@
 <?php
-	if(isset($_POST['email'])){
-		require('lib/Mailchimp.php');
+	require_once 'vendor/swiftmailer/swiftmailer/lib/swift_required.php';
+	require_once 'vendor/pelago/emogrifier/Classes/Emogrifier.php';
 
-		$API_KEY = '0a7ab4c0b3c62d0b26f29ccd4ff552cd-us11';
-		$LIST_ID = 'cd3a54116c';
+	if($_SERVER['REQUEST_METHOD'] === 'POST' AND isset($_POST['email'])){
+		$email_input = $_POST['email'];
+		if(filter_var($email_input, FILTER_VALIDATE_EMAIL)){
+			$jsonStr = file_get_contents("config.json");
+			$config = json_decode($jsonStr);
 
-		$Mailchimp = new Mailchimp($API_KEY);
-		$Mailchimp_Lists = new Mailchimp_Lists($Mailchimp);
-		$subscriber = null;
+			// Create the SMTP configuration
+			$transport = Swift_SmtpTransport::newInstance($config->email->host, $config->email->port, $config->email->encryption);
+			$transport->setUsername($config->email->username);
+			$transport->setPassword($config->email->password);
 
-		try{
-			$subscriber = $Mailchimp_Lists->subscribe(
-				$LIST_ID, 
-				array('email' => htmlentities($_POST['email']))
-			);
-		} catch (Mailchimp_Error $e) {
-			if($e->getCode())
+			// Create the message
+			$message = Swift_Message::newInstance();
+			$message->setEncoder(Swift_Encoding::get8BitEncoding());
+			$message->setTo(array(
+		  		$email_input => $email_input,
+			  	"hola@furgontrack.cl" => "Contacto FurgonTrack"
+			));
+			$message->setSubject("Solicitud de inscripción en lista de correo");
+			
+			$email_content = file_get_contents("_email_.html");			
+			$css_email = file_get_contents("_email.css");
+
+			$emogrify = new \Pelago\Emogrifier();
+			$emogrify->setCSS($css_email);
+			$emogrify->setHTML($email_content);
+			$email_content = @$emogrify->emogrify();
+
+			$message->setBody($email_content, "text/html");
+			$message->setFrom("hola@furgontrack.cl", "Contacto FurgonTrack");
+
+			// Send the email
+			$mailer = Swift_Mailer::newInstance($transport);
+			if($mailer->send($message)){
+				echo "success";
+				return;
+			} else {
 				echo "2";
-			return;
-		}
-
-		try{
-			$subscriber = $Mailchimp_Lists->subscribe(
-				$LIST_ID, 
-				array('email' => htmlentities($_POST['email']), 'double_optin' => false),
-				array('FNAME' => '','LNAME' => ''),
-				'html',
-				false
-			);
-		} catch (Mailchimp_Error $e) {
-			if($e->getCode())
-				echo "2";
-			return;
-		}
-
-		if(!empty($subscriber['leid'])){
-		   echo "success";
-		   return;
+				return;
+			}
 		} else {
-		    echo "0";
-		    return;
+			echo "1";
+			return;
 		}
-
 	} else{
 		echo "1";
 		return;
