@@ -22,8 +22,8 @@
 			));
 			$message->setSubject($subscribe->subject);
 			
-			$email_content = file_get_contents("_email_.html");			
-			$css_email = file_get_contents("_email.css");
+			$email_content = file_get_contents("email_tpl/_email_.html");			
+			$css_email = file_get_contents("email_tpl/_email.css");
 
 			$emogrify = new \Pelago\Emogrifier();
 			$emogrify->setCSS($css_email);
